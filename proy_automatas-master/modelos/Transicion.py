@@ -1,3 +1,4 @@
+#Clase de las transiciones entre los estados
 class Transicion:
     def __init__(self,origen,simbolo,destino):
         self.origen = origen
