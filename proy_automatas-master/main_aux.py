@@ -26,12 +26,12 @@ if __name__ == "__main__":
     ruta = input("Ingrese ruta de archivo : ")
     archivo = open(ruta)
     automatas = json.load(archivo)
-    aux = []
+    aux = [] 
     
     lista_automatas = automatas["automatas"]
     cont = 0;
     for aut in lista_automatas:
-        print("------------------------------------------")
+        print("------------------------- -----------------")
         print("*********** Automata",cont, "************")
 
         print("*** Informacion general ***")
