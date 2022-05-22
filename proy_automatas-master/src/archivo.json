@@ -1,0 +1,49 @@
+{
+    "automatas" :[
+        {
+            "Q":["S0","S1"],
+            "Alf":["a", "b"],
+            "Q0":"S0",
+            "F":["S1"],
+            "transiciones":[
+                {"origen":"S0","simbolo":"b","destino":"S1"},
+                {"origen":"S1","simbolo":"b","destino":"S0"},
+                {"origen":"S0","simbolo":"a","destino":"S1"},
+                {"origen":"S0","simbolo":"a","destino":"S0"},
+                {"origen":"S1","simbolo":"b","destino":"S1"}
+            ]
+        },{
+            "Q":["a","b","c"],
+            "Alf":[0,1],
+            "Q0":"a",
+            "F":["b"],
+            "transiciones":[
+                {"origen":"a","simbolo":"0","destino":"b"},
+                {"origen":"b","simbolo":"1","destino":"a"},
+                {"origen":"a","simbolo":"1","destino":"c"}
+            ]
+        },
+        {
+            "Q":["Z", "Y","X"],
+            "Alf":[5,6],
+            "Q0":"Z",
+            "F":["Y","X"],
+            "transiciones":[
+                {"origen":"Y","simbolo":"5","destino":"Y"},
+                {"origen":"Z","simbolo":"5","destino":"Y"},
+                {"origen":"Y","simbolo":"6","destino":"X"},
+                {"origen":"Z","simbolo":"6","destino":"X"}
+            ]
+        },{
+            "Q":["z", "b","h", "g"],
+            "Alf":[0,1, 2],
+            "Q0":"h",
+            "F":["g", "z"],
+            "transiciones":[
+                {"origen":"b","simbolo":"5","destino":"g"},
+                {"origen":"h","simbolo":"5","destino":"b"},
+                {"origen":"Z","simbolo":"6","destino":"h"}
+            ]
+        }
+    ]
+}
