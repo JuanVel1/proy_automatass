@@ -1,15 +1,14 @@
 from modelos.Estado import *
-from modelos.Transicion import * 
+from modelos.Transicion import *
 
 
 class Automata:
-    def __init__(self,alf, ini, fin):
+    def __init__(self, alf, ini, fin):
         self._estados = []  # objetos
         self._alfabeto = []
         self._estado_inicial = []
         self._estados_finales = []
-        self.listaTransiciones = [] #lista de transiciones entre los estados del automata
-
+        self.listaTransiciones = []  # lista de transiciones entre los estados del automata
 
     def agregarEstado(self, nuevoEstado):
         nuevo = Estado(nuevoEstado)
@@ -46,46 +45,48 @@ class Automata:
                 res.append(estado)
         return res
 
-    #Obtener lista de transiciones del automata
+    # Obtener lista de transiciones del automata
     def getTransiciones(self):
         return self.listaTransiciones
 
-    def setTransiciones(self,transicion):
+    def setTransiciones(self, transicion):
         self.listaTransiciones = transicion
 
-
     # Obtener estado
-    def obtenerEstado(self,estadoB):
+    def obtenerEstado(self, estadoB):
         for estado in self._estados:
             if estado.getNombre() == estadoB:
                 return estado
         print("El estado no existe")
-    
-    #Verificar si estadp existe en la lista de estados del automata
-    def verificarEstado(self,estadoV):
+
+    # Verificar si estadp existe en la lista de estados del automata
+    def verificarEstado(self, estadoV):
         for estado in self._estados:
             if estadoV == estado.getNombre():
                 return True
-        return False    
+        return False
 
-    #Agregar Transicion
-    def agregarTransicion(self,origen,simbolo,destino):
-        if self.verificarEstado(origen) and self.verificarEstado(destino): #Verificamos que origen y destino existan
-            if not self.buscarTransicion(origen,destino): #Si la transicion no existe
-                self.listaTransiciones.append(Transicion(origen,simbolo,destino)) #Agregamos la transicion  a la lista de transiciones       
-                self.obtenerEstado(origen).getListaAdyacentes().append(destino) #Agregamos la conexion al estado
+        # Agregar Transicion
+
+    def agregarTransicion(self, origen, simbolo, destino):
+        if self.verificarEstado(origen) and self.verificarEstado(destino):  # Verificamos que origen y destino existan
+            if not self.buscarTransicion(origen, destino, simbolo):  # Si la transicion no existe
+                self.listaTransiciones.append(
+                    Transicion(origen, simbolo, destino))  # Agregamos la transicion  a la lista de transiciones
+                self.obtenerEstado(origen).getListaAdyacentes().append(destino)  # Agregamos la conexion al estado
             else:
                 print("La transicion ya existe")
         else:
-            print("Algun vertice no existe")    
+            print("Algun vertice no existe")
 
-    #Buscar Transicion
-    def buscarTransicion(self,origen,destino):
+            # Buscar Transicion
+
+    def buscarTransicion(self, origen, destino, simbolo):
         for transicion in self.listaTransiciones:
-            if transicion.getOrigen() == origen and transicion.getDestino() == destino:
-                return True # si la transicion es encontrada se envia un True
-        return False # si la transicion no es encontrada enviamos False
-    
+            if transicion.getOrigen() == origen and transicion.getDestino() == destino and transicion.getSimbolo() == simbolo:
+                return True  # si la transicion es encontrada se envia un True
+        return False  # si la transicion no es encontrada enviamos False
+
     # Imprimir transiciones
     def imprimirTransiciones(self):
         for transiciones in self.listaTransiciones:
@@ -97,4 +98,3 @@ class Automata:
         for estado in self._estados:
             print("Estado: ", estado.getNombre())
             print("Conexiones: ", estado.getListaAdyacentes())
-
