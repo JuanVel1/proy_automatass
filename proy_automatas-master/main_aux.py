@@ -1,38 +1,23 @@
 import json
 
 from modelos.Automata import Automata
+from control.Operaciones import Operaciones
 from modelos.Estado import Estado
 from modelos.Transicion import Transicion
 
-
 if __name__ == "__main__":
-    """aut = Automata()
-    aut.agregarEstado("a")
-    aut.agregarEstado("b")
-    aut.agregarEstado("c")
-    aut.agregarEstado("d")
-
-    for estado in aut.getEstados():
-        print(estado.getNombre())
-    
-    aut.setEstadoInicial("a")
-    aut.setEstadosFinales(["b", "c"])
-    aut.eliminarEstado("d")
-
-    for estado in aut.getEstados():
-        print(estado.getNombre())"""
-
     print("Leyendo  archivo .json-----")
-    ruta = input("Ingrese ruta de archivo : ")
+    # ruta = input("Ingrese ruta de archivo : ")
+    ruta = "src/archivo.json"
     archivo = open(ruta)
     automatas = json.load(archivo)
-    aux = [] 
-    
+    lista_automatas_aux = []
+
     lista_automatas = automatas["automatas"]
-    cont = 0;
+    cont = 0
     for aut in lista_automatas:
         print("------------------------- -----------------")
-        print("*********** Automata",cont, "************")
+        print("*********** Automata", cont, "************")
 
         print("*** Informacion general ***")
         print(aut['Q'])
@@ -47,18 +32,61 @@ if __name__ == "__main__":
             aux1.agregarEstado(estado)
         for transicion in aut['transiciones']:
             aux1.agregarTransicion(transicion["origen"], transicion["simbolo"], transicion["destino"])
-        
+        aux1.setEstadoInicial(aut['Q0'])
+        aux1.setEstadosFinales(aut['F'])
+
         print("------------------Estados -----------------------------------")
         aux1.imprimirEstados()
+        print("------------------Estado Inicial -----------------------------------")
+        print(aux1.getEstadoInicial())
+        print("------------------Estados Finales -----------------------------------")
+        for estado_aceptacion in aux1.getEstadosFinales():
+            print(estado_aceptacion.getNombre())
         print("------------------Transiciones ------------------------------")
         aux1.imprimirTransiciones()
-        aux.append(aux1)
-        cont = cont+1
-        print("------------------------------------------")
+        lista_automatas_aux.append(aux1)
+        cont = cont + 1
 
+    print("------------------------------------------")
+    print("------------------Union ------------------------------")
+    ope = Operaciones(lista_automatas_aux[0], lista_automatas_aux[1])
+    listaRes = ope.union_inicial()
 
+    estados_de_aceptacion = aux1.getEstadosFinales()
 
-    """for automata in aux:
-        for estado in automata.getEstados():
-            print(">> ", estado.getNombre())
-        print("**********")"""
+    # Buscamos el estado inicial
+    estado_inicial = listaRes[0][0]
+    print("Estado inicial ", estado_inicial)
+
+    estados_finales = []
+    # print(listaRes)
+
+    for automata in lista_automatas_aux:
+        estados_de_aceptacion.append(automata.getEstadosFinales())
+    # print(estados_de_aceptacion)
+
+    """print("Estados de aceptacion")
+    for estado in estados_de_aceptacion:
+        if type(estado) == Estado:
+            print(estado.getNombre())
+        else:
+            for e in estado:
+                print(e.getNombre())"""
+
+    for tupla in listaRes:
+        for estado in tupla:
+            for final in estados_de_aceptacion:
+                if type(final) == Estado:
+                    if (estado[0] == final.getNombre()) or (estado[1] == final.getNombre()):
+                        if estado not in estados_finales:
+                            estados_finales.append(estado)
+                else:
+                    for f in final:
+                        if (estado[0] == f.getNombre()) or (estado[1] == f.getNombre()):
+                            if estado not in estados_finales:
+                                estados_finales.append(estado)
+
+    # print("estados finales ", estados_finales)
+    print(listaRes, " << listaRes")
+    print("lista de estados y transiciones finales en union ", ope.unionFinal(listaRes, lista_automatas_aux))
+
