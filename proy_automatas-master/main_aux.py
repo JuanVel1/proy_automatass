@@ -77,8 +77,8 @@ if __name__ == "__main__":
 
     # print("estados finales ", estados_finales)
     # print(listaRes, " << listaRes")
-    print("Automata resultante exitosamente! ",
-          ope.unionFinal(estado_inicial, listaRes, lista_automatas_aux, estados_finales))
+    automata_resultante2 = ope.unionFinal(estado_inicial, listaRes, lista_automatas_aux, estados_finales)
+    print("Automata resultante exitosamente! ", automata_resultante2)
 
     print("------------------Interseccion ------------------------------")
     listaRes = ope.interseccion_inicial()
@@ -108,7 +108,17 @@ if __name__ == "__main__":
     automata_resultante.imprimirTransiciones()
 
     print("------------------Complemento ------------------------------")
-    automata_resultante = ope.complemento(lista_automatas_aux[1])
+    automata_resultante1 = ope.complemento(lista_automatas_aux[1])
 
     print("------------------Reverso ------------------------------")
-    automata_resultante = ope.reverso(lista_automatas_aux[1])
+    automata_resultante1 = ope.reverso(automata_resultante2)
+
+    print("------------------Completar ------------------------------")
+    if automata_resultante1.esCompleto():
+        print("Es completo")
+    else:
+        print("No es completo")
+        # automata_resultante1.imprimirEstados()
+        for estado in ope.completar(automata_resultante1):
+            print(estado)
+            print(estado[0].getNombre())
