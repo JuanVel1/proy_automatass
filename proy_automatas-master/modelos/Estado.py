@@ -3,7 +3,7 @@ class Estado:
         self._nombre = nombre  # Nombre o letra
         self._esFinal = False
         self._esInicial = False
-        self.listaAdyacentes = [] #estados con lo que esta conectado/tiene transicion
+        self._listaAdyacentes = [] #estados con lo que esta conectado/tiene transicion
 
 
     def cambiarEstadoFinal(self):
@@ -22,10 +22,10 @@ class Estado:
         return self._esFinal
 
     def getListaAdyacentes(self):
-        return self.listaAdyacentes
+        return self._listaAdyacentes
 
     def setListaAdyacentes(self, listaA):
-        self.listaAdyacentes = listaA
+        self._listaAdyacentes = listaA
 
 
 
