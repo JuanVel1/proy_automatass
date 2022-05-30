@@ -51,7 +51,6 @@ if __name__ == "__main__":
     print("------------------Union ------------------------------")
     ope = Operaciones(lista_automatas_aux[0], lista_automatas_aux[1])
     listaRes = ope.union_inicial()
-
     estados_de_aceptacion = aux1.getEstadosFinales()
 
     # Buscamos el estado inicial
@@ -59,19 +58,9 @@ if __name__ == "__main__":
     print("Estado inicial ", estado_inicial)
 
     estados_finales = []
-    # print(listaRes)
 
     for automata in lista_automatas_aux:
         estados_de_aceptacion.append(automata.getEstadosFinales())
-    # print(estados_de_aceptacion)
-
-    """print("Estados de aceptacion")
-    for estado in estados_de_aceptacion:
-        if type(estado) == Estado:
-            print(estado.getNombre())
-        else:
-            for e in estado:
-                print(e.getNombre())"""
 
     for tupla in listaRes:
         for estado in tupla:
@@ -87,6 +76,33 @@ if __name__ == "__main__":
                                 estados_finales.append(estado)
 
     # print("estados finales ", estados_finales)
-    print(listaRes, " << listaRes")
-    print("lista de estados y transiciones finales en union ", ope.unionFinal(listaRes, lista_automatas_aux))
+    # print(listaRes, " << listaRes")
+    print("Automata resultante exitosamente! ",
+          ope.unionFinal(estado_inicial, listaRes, lista_automatas_aux, estados_finales))
 
+    print("------------------Interseccion ------------------------------")
+    listaRes = ope.interseccion_inicial()
+
+    # Buscamos el estado inicial
+    estado_inicial = listaRes[0][0]
+    print("Estado inicial ", estado_inicial)
+
+    estados_finales = []
+    estados_de_aceptacion = []
+
+    for automata in lista_automatas_aux:
+        estados_de_aceptacion.append(automata.getEstadosFinales())
+
+    print(listaRes)
+
+    estados_finales = ""
+    for estado_x_automata in estados_de_aceptacion:
+        for estado in estado_x_automata:
+            if estado.getNombre() not in estados_finales:
+                estados_finales += estado.getNombre()
+
+    automata_resultante = ope.interseccion_final(estado_inicial, listaRes, lista_automatas_aux, [estados_finales])
+    print("Automata resultante exitosamente! ", automata_resultante)
+
+    automata_resultante.imprimirEstados()
+    automata_resultante.imprimirTransiciones()
