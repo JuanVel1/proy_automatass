@@ -155,5 +155,107 @@ class Operaciones:
         return automata
 
     def reverso(self, automata):
-        # Todas las transiciones las cambiamos de orientación
-        pass
+        # Reverso de un autómata con Varios estados de aceptación
+        # Cuando nuestro autómata tiene mas de un estado de aceptación debemos crear un nuevo estado, convertir ese
+        # nuevo estado en uno de aceptación, todos los estados de aceptación pasan a ser estados de no aceptación y
+        # creamos transiciones lambda hacia el nuevo estado.
+        estados_aceptacion = automata.getEstadosFinales()
+
+        if len(estados_aceptacion) > 1:
+            # Tiene varios estados de aceptacion
+            automata.agregarEstado("nuevo estado")
+            nuevo_estado = automata.obtenerEstado("nuevo estado")
+            nuevo_estado.cambiarEstadoFinal()
+
+            for estado in estados_aceptacion:
+                estado.cambiarEstadoFinal()  # todos los estados de aceptación pasan a ser estados de no aceptación
+                # creamos transiciones lambda hacia el nuevo estado.
+                automata.agregarTransicion(estado.getNombre(), "λ", nuevo_estado.getNombre())
+
+            automata.imprimirEstados()
+            automata.imprimirTransiciones()
+            print("....")
+
+            # Ahora hacemos el mismo proceso, cambiamos la orientación de las transiciones y nuestro estado de
+            # aceptación pasa a ser un estado inicial y nuestro estado inicial pasa a ser estado de aceptación
+            self.cambiarSentido(automata)
+
+            for estado in automata.getEstadosFinales():
+                estado.cambiarEstadoInicial()
+                estado.cambiarEstadoFinal()
+
+            estado_inicial = automata.getEstadoInicial()
+            automata.obtenerEstado(estado_inicial).cambiarEstadoInicial()
+            automata.obtenerEstado(estado_inicial).cambiarEstadoFinal()
+
+            print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            for estado in automata.getEstados():
+                alcanzable = False
+                for transicion in automata.getTransiciones():
+                    if estado.esEstadoFinal() or estado.esEstadoInicial() or transicion.getDestino() == estado.getNombre():
+                        alcanzable = True
+                if alcanzable:
+                    # print("Estado inalcanzable : ", estado.getNombre())
+                    print("ok")
+                else:
+                    automata.eliminarTransicion(estado)
+
+            automata.imprimirEstados()
+            automata.imprimirTransiciones()
+            print("....")
+        else:
+            # Ahora hacemos el mismo proceso, cambiamos la orientación de las transiciones y nuestro estado de
+            # aceptación pasa a ser un estado inicial y nuestro estado inicial pasa a ser estado de aceptación
+            self.cambiarSentido(automata)
+
+            for estado in automata.getEstadosFinales():
+                estado.cambiarEstadoInicial()
+                estado.cambiarEstadoFinal()
+
+            estado_inicial = automata.getEstadoInicial()
+            automata.obtenerEstado(estado_inicial).cambiarEstadoInicial()
+            automata.obtenerEstado(estado_inicial).cambiarEstadoFinal()
+
+            automata.imprimirEstados()
+            automata.imprimirTransiciones()
+            print("....")
+        return automata
+
+    def cambiarSentido(self, automata):
+        for transicion in automata.getTransiciones():
+            origen = transicion.getOrigen()
+            destino = transicion.getDestino()
+            transicion.setOrigen(destino)
+            transicion.setDestino(origen)
+            estado_origen = automata.obtenerEstado(origen)
+            estado_origen.getListaAdyacentes().remove(destino)
+            estado_destino = automata.obtenerEstado(destino)
+            estado_destino.getListaAdyacentes().append(origen)
+
+    def completar(self, automata):
+        if automata.esCompleto():
+            print("Automata ya completo!")
+            return
+        else:
+            automata.agregarEstado("sumidero")
+            faltantes = []  # [(estado, [simbolos])]
+            for simbolo in automata.getAlfabeto():
+                for estado in automata.getEstados():
+                    simbolos_x_estado = []
+                    for transicion in automata.getTransiciones():
+                        if transicion.getOrigen() == estado.getNombre() or transicion.getDestino() == estado.getNombre():
+                            simbolos_x_estado.append(transicion.getSimbolo())
+                    if simbolo not in simbolos_x_estado:
+                        if len(faltantes) < 1:
+                            faltantes.append((estado, [simbolo]))
+                        else:
+                            for tupla in faltantes:
+                                if tupla[0] == estado:
+                                    if simbolo not in tupla[1]:
+                                        tupla[1].append(simbolo)
+                                else:
+                                        if (estado, [simbolo]) not in faltantes:
+                                            faltantes.append((estado, [simbolo]))
+
+            print("faltantes - ", faltantes)
+            return faltantes
