@@ -27,16 +27,10 @@ class Operaciones:
                 aux.append((inicial.getNombre() + final.getNombre()))
             listaRes.append(aux)
 
-        # Solo imprime
-        """for res in listaRes:
-            for tupla in res:
-                print(res[0][0], " >> ", tupla)
-                print("...")"""
-
         return listaRes
 
     # Metodo que se llama desde el main con la lista de estados ab, bc, ... creados
-    def unionFinal(self, lista_estados, lista_automatas):
+    def unionFinal(self, ini, lista_estados, lista_automatas, finales):
         automata_1, automata_2 = lista_automatas
         res = []  # variable que guardara el resultado final
 
@@ -52,22 +46,90 @@ class Operaciones:
                     for estados_x_automata in lista_estados:
                         for estado in estados_x_automata:
                             if estado[0] == transicion_aut1.getOrigen() and estado[1] == transicion_aut2.getOrigen():
-                                print("El estado esta ", estado)
+                                # print("El estado esta ", estado)
                                 res.append(estado)
                                 # Transicion(estado)
                             if estado[0] == transicion_aut1.getDestino() and estado[1] == transicion_aut2.getDestino():
-                                print("Destino ", estado)
-                                print("simbolo ", transicion_aut1.getSimbolo())
+                                # print("Destino ", estado)
+                                # print("simbolo ", transicion_aut1.getSimbolo())
                                 res.append(estado)
                                 res.append(transicion_aut1.getSimbolo())
                                 # transiciones.append((transicion_aut1.getOrigen(),))
-        # Dividir la lista de 3 en 3 - origen, destino, simbolo
+        # Dividir la lista de transiciones de 3 en 3 - origen, destino, simbolo
         res = [res[i:i + 3] for i in range(0, len(res), 3)]
-        return res
+        # Instanciando la clase Automata
+        nuevo_automata = Automata([res[0][2], res[1][2]], ini, finales)
+        # Agregando estados
+        for estados_x_automata in lista_estados:
+            for estado in estados_x_automata:
+                nuevo_automata.agregarEstado(estado)
+        # Agregando transiciones
+        for transicion in res:
+            nuevo_automata.agregarTransicion(transicion[0], transicion[2], transicion[1])
 
-    def agregarTransiciones(self):
-        pass
+        # Estableciendo estado inicial y final
+        nuevo_automata.setEstadoInicial(ini)
+        nuevo_automata.setEstadosFinales(finales)
+        print("Estado inicial ", nuevo_automata.getEstadoInicial())
+        for estado in nuevo_automata.getEstadosFinales():
+            print("Estado Final ", estado.getNombre())
 
+        return nuevo_automata
+
+    def interseccion_inicial(self):
+        # Listamos los estados de cada automata
+        lista1 = self.a1.getEstados()
+        lista2 = self.a2.getEstados()
+
+        listaRes = []
+
+        # For para enlazar los estados de cada lista
+        for inicial in lista1:
+            aux = []
+            for final in lista2:
+                aux.append((inicial.getNombre() + final.getNombre()))
+            listaRes.append(aux)
+
+        return listaRes
+
+    def interseccion_final(self, ini, lista_estados, lista_automatas, finales):
+        automata_1, automata_2 = lista_automatas
+        res = []  # variable que guardara el resultado final
+
+        # Recorremos las transiciones de cada automata para encontrar coincidencias
+        for transicion_aut1 in automata_1.getTransiciones():
+            for transicion_aut2 in automata_2.getTransiciones():
+                if transicion_aut1.getSimbolo() == transicion_aut2.getSimbolo():
+                    print("coincidencia aut1 >> ", transicion_aut1.getOrigen(), transicion_aut1.getSimbolo(),
+                          transicion_aut1.getDestino())
+                    print("coincidencia aut2 >> ", transicion_aut2.getOrigen(), transicion_aut2.getSimbolo(),
+                          transicion_aut2.getDestino())
+                    for estados_x_automata in lista_estados:
+                        for estado in estados_x_automata:
+                            if estado[0] == transicion_aut1.getOrigen() and estado[1] == transicion_aut2.getOrigen():
+                                res.append(estado)
+                            if estado[0] == transicion_aut1.getDestino() and estado[1] == transicion_aut2.getDestino():
+                                res.append(estado)
+                                res.append(transicion_aut1.getSimbolo())
+        res = [res[i:i + 3] for i in range(0, len(res), 3)]
+        # Instanciando la clase Automata
+        nuevo_automata = Automata([res[0][2], res[1][2]], ini, finales)
+        # Agregando estados
+        for estados_x_automata in lista_estados:
+            for estado in estados_x_automata:
+                nuevo_automata.agregarEstado(estado)
+        # Agregando transiciones
+        for transicion in res:
+            nuevo_automata.agregarTransicion(transicion[0], transicion[2], transicion[1])
+
+        # Estableciendo estado inicial y final
+        nuevo_automata.setEstadoInicial(ini)
+        nuevo_automata.setEstadosFinales(finales)
+        print("Estado inicial ", nuevo_automata.getEstadoInicial())
+        for estado in nuevo_automata.getEstadosFinales():
+            print("Estado Final ", estado.getNombre())
+
+        return nuevo_automata
     # Se supone que es reverso
     def cambiarSentido(self, origen, destino):
         for arista in self.listaAristas:
