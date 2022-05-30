@@ -130,6 +130,7 @@ class Operaciones:
             print("Estado Final ", estado.getNombre())
 
         return nuevo_automata
+
     # Se supone que es reverso
     def cambiarSentido(self, origen, destino):
         for arista in self.listaAristas:
@@ -141,3 +142,18 @@ class Operaciones:
                         vertice.getListaAdyacentes().remove(destino)
                     if vertice.getDato() == destino:
                         vertice.getListaAdyacentes().append(origen)
+
+    def complemento(self, automata):
+        """print("------------------Antes ------------------------------")
+        automata.imprimirEstados()
+        automata.imprimirTransiciones()"""
+        for estado in automata.getEstados():
+            estado.cambiarEstadoFinal()
+        """print("------------------Despues ------------------------------")
+        automata.imprimirEstados()
+        automata.imprimirTransiciones()"""
+        return automata
+
+    def reverso(self, automata):
+        # Todas las transiciones las cambiamos de orientación
+        pass
