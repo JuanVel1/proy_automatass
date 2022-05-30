@@ -5,9 +5,9 @@ from modelos.Transicion import *
 class Automata:
     def __init__(self, alf, ini, fin):
         self._estados = []  # objetos
-        self._alfabeto = []
-        self._estado_inicial = []
-        self._estados_finales = []
+        self._alfabeto = alf
+        self._estado_inicial = ini
+        self._estados_finales = fin
         self.listaTransiciones = []  # lista de transiciones entre los estados del automata
 
     def agregarEstado(self, nuevoEstado):
@@ -73,7 +73,10 @@ class Automata:
             if not self.buscarTransicion(origen, destino, simbolo):  # Si la transicion no existe
                 self.listaTransiciones.append(
                     Transicion(origen, simbolo, destino))  # Agregamos la transicion  a la lista de transiciones
-                self.obtenerEstado(origen).getListaAdyacentes().append(destino)  # Agregamos la conexion al estado
+                aux = self.obtenerEstado(origen).getListaAdyacentes()
+                aux.append(destino)
+                self.obtenerEstado(origen).setListaAdyacentes(aux)
+                # Agregamos la conexion al estado
             else:
                 print("La transicion ya existe")
         else:
@@ -95,6 +98,13 @@ class Automata:
 
     # Imprimir Estados
     def imprimirEstados(self):
+        print("------------------Estados ------------------------------")
         for estado in self._estados:
             print("Estado: ", estado.getNombre())
             print("Conexiones: ", estado.getListaAdyacentes())
+            if estado.esEstadoFinal():
+                print("Es estado final")
+            if estado.esEstadoInicial():
+                print("Es estado inicial")
+            print("..")
+        print("------------------ ------------------------------")
