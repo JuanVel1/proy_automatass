@@ -33,6 +33,9 @@ class Automata:
     def getEstados(self):
         return self._estados
 
+    def getAlfabeto(self):
+        return self._alfabeto
+
     def getEstadoInicial(self):
         for estado in self._estados:
             if estado.esEstadoInicial():
@@ -45,12 +48,17 @@ class Automata:
                 res.append(estado)
         return res
 
+    def getEstadoAceptacion(self):
+        for estado in self._estados:
+            if estado.esEstadoFinal():
+                pass
+
     # Obtener lista de transiciones del automata
     def getTransiciones(self):
         return self.listaTransiciones
 
-    def setTransiciones(self, transicion):
-        self.listaTransiciones = transicion
+    def setTransiciones(self, transiciones):
+        self.listaTransiciones = transiciones
 
     # Obtener estado
     def obtenerEstado(self, estadoB):
@@ -90,10 +98,19 @@ class Automata:
                 return True  # si la transicion es encontrada se envia un True
         return False  # si la transicion no es encontrada enviamos False
 
+    def eliminarTransicion(self, estado):
+        if self.verificarEstado(estado.getNombre()):
+            for transicion in self.listaTransiciones:
+                if transicion.getOrigen() == estado.getNombre() or transicion.getDestino() == estado.getNombre():
+                    self.listaTransiciones.remove(transicion)
+        else:
+            print("Estado inexistente")
+
     # Imprimir transiciones
     def imprimirTransiciones(self):
+        print("------------------Transiciones ------------------------------")
         for transiciones in self.listaTransiciones:
-            print("Transicion: ", transiciones.getOrigen(), " - ", transiciones.getDestino(),
+            print("Transicion: ", transiciones.getOrigen(), " - ", transiciones.getDestino(), " - ",
                   " simbolo: ", transiciones.getSimbolo())
 
     # Imprimir Estados
@@ -108,3 +125,23 @@ class Automata:
                 print("Es estado inicial")
             print("..")
         print("------------------ ------------------------------")
+
+    # Desactivar estado inicial para reverso
+    def desactivarInicial(self):
+        self._estado_inicial = None
+        for estado in self._estados:
+            if estado.esEstadoInicial():
+                estado.cambiarEstadoInicial()
+
+    def esCompleto(self):
+        esta = True
+        for simbolo in self.getAlfabeto():
+            for estado in self.getEstados():
+                simbolos_x_estado = []
+                for transicion in self.getTransiciones():
+                    if transicion.getOrigen() == estado.getNombre() or transicion.getDestino() == estado.getNombre():
+                        simbolos_x_estado.append(transicion.getSimbolo())
+                if simbolo not in simbolos_x_estado:
+                    esta = False
+                    return esta
+        return esta
