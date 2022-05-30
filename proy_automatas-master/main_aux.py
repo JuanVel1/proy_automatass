@@ -106,3 +106,9 @@ if __name__ == "__main__":
 
     automata_resultante.imprimirEstados()
     automata_resultante.imprimirTransiciones()
+
+    print("------------------Complemento ------------------------------")
+    automata_resultante = ope.complemento(lista_automatas_aux[1])
+
+    print("------------------Reverso ------------------------------")
+    automata_resultante = ope.reverso(lista_automatas_aux[1])
