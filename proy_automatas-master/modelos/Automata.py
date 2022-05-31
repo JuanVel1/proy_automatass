@@ -1,5 +1,9 @@
 from modelos.Estado import *
 from modelos.Transicion import *
+import os
+from graphviz import Digraph
+
+os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
 
 
 class Automata:
@@ -9,6 +13,7 @@ class Automata:
         self._estado_inicial = ini
         self._estados_finales = fin
         self.listaTransiciones = []  # lista de transiciones entre los estados del automata
+        self.imagen = Digraph(format='png')
 
     def agregarEstado(self, nuevoEstado):
         nuevo = Estado(nuevoEstado)
@@ -37,9 +42,10 @@ class Automata:
         return self._alfabeto
 
     def getEstadoInicial(self):
-        for estado in self._estados:
+        """for estado in self._estados:
             if estado.esEstadoInicial():
-                return estado.getNombre()
+                """
+        return self._estado_inicial
 
     def getEstadosFinales(self):
         res = []
@@ -48,11 +54,6 @@ class Automata:
                 res.append(estado)
         return res
 
-    def getEstadoAceptacion(self):
-        for estado in self._estados:
-            if estado.esEstadoFinal():
-                pass
-
     # Obtener lista de transiciones del automata
     def getTransiciones(self):
         return self.listaTransiciones
@@ -60,14 +61,16 @@ class Automata:
     def setTransiciones(self, transiciones):
         self.listaTransiciones = transiciones
 
-    # Obtener estado
+        # Obtener estado
+
     def obtenerEstado(self, estadoB):
         for estado in self._estados:
             if estado.getNombre() == estadoB:
                 return estado
         print("El estado no existe")
 
-    # Verificar si estadp existe en la lista de estados del automata
+        # Verificar si estadp existe en la lista de estados del automata
+
     def verificarEstado(self, estadoV):
         for estado in self._estados:
             if estadoV == estado.getNombre():
@@ -106,14 +109,16 @@ class Automata:
         else:
             print("Estado inexistente")
 
-    # Imprimir transiciones
+        # Imprimir transiciones
+
     def imprimirTransiciones(self):
         print("------------------Transiciones ------------------------------")
         for transiciones in self.listaTransiciones:
             print("Transicion: ", transiciones.getOrigen(), " - ", transiciones.getDestino(), " - ",
                   " simbolo: ", transiciones.getSimbolo())
 
-    # Imprimir Estados
+        # Imprimir Estados
+
     def imprimirEstados(self):
         print("------------------Estados ------------------------------")
         for estado in self._estados:
@@ -145,3 +150,26 @@ class Automata:
                     esta = False
                     return esta
         return esta
+
+    def dibujarAutomata(self):
+        self.imagen.clear(keep_attrs=True)
+        self.imagen.node('fake', style='invisible')
+
+        for estado in self._estados:
+            if estado.getNombre() is self._estado_inicial:
+                if estado.getNombre() in self._estados_finales:
+                    self.imagen.node(str(estado.getNombre()), root='true', shape='doublecircle')
+                else:
+                    self.imagen.node(str(estado.getNombre()), root='true')
+                self.imagen.edge('fake', str(estado.getNombre()), style='bold')
+
+            elif estado.getNombre() in self._estados_finales:
+                self.imagen.node(str(estado.getNombre()), shape='doublecircle')
+            else:
+                self.imagen.node(str(estado.getNombre()))
+
+        for transicion in self.listaTransiciones:
+            self.imagen.edge(str(transicion.getOrigen()), str(transicion.getDestino()),
+                             label=transicion.getSimbolo())
+
+        self.imagen.render("src/resultado")
