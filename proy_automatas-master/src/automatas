@@ -1,0 +1,26 @@
+digraph {
+	1 [style=invisible]
+	a [root=true shape=doublecircle]
+	1 -> a [style=bold]
+	b
+	c
+	d
+	"nuevo estado"
+	b -> a [label=0]
+	a -> a [label=1]
+	c -> b [label=0]
+	d -> c [label=1]
+	"nuevo estado" -> a [label="λ"]
+	"nuevo estado" -> c [label="λ"]
+	"nuevo estado" -> d [label="λ"]
+	2 [style=invisible]
+	e [root=true]
+	2 -> e [style=bold]
+	f [shape=doublecircle]
+	g
+	h
+	e -> f [label=1]
+	f -> g [label=0]
+	h -> g [label=1]
+	g -> h [label=0]
+}

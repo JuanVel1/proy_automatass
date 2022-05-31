@@ -1,0 +1,25 @@
+digraph {
+	fake [style=invisible]
+	ae [root=true]
+	fake -> ae [style=bold]
+	af [shape=doublecircle]
+	ag
+	ah
+	be
+	bf
+	bg
+	bh
+	ce
+	cf
+	cg
+	ch
+	de
+	df
+	dg
+	dh
+	"nuevo estadoe"
+	"nuevo estadof"
+	"nuevo estadog"
+	"nuevo estadoh"
+	ae -> af [label=1]
+}
