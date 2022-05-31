@@ -232,30 +232,50 @@ class Operaciones:
             estado_destino = automata.obtenerEstado(destino)
             estado_destino.getListaAdyacentes().append(origen)
 
+    def getFaltantes(self, automata):
+        faltantes = []  # [(estado, [simbolos]), (estado, [simbolos])...]
+
+        # Recorremos cada estado
+        for estado in automata.getEstados():
+            # Almacenamos los simbolos faltantes de cada estado
+            simbolos_x_estado = []
+            simbolos_x_estado_faltantes = []
+            for transicion in automata.getTransiciones():
+                # Si el estado esta en la transicion como estado origen o destino entra
+                if transicion.getOrigen() == estado.getNombre():
+                    if type(transicion.getSimbolo()) is list:
+                        for simbolo in transicion.getSimbolo():
+                            simbolos_x_estado.append(simbolo)
+                    else:
+                        simbolos_x_estado.append(transicion.getSimbolo())
+
+            print(estado.getNombre(), " > ", simbolos_x_estado)
+            # Recorremos el alfabeto 0,1,...
+            for simbolo in automata.getAlfabeto():
+                if simbolo not in simbolos_x_estado:
+                    simbolos_x_estado_faltantes.append(simbolo)
+
+            if len(simbolos_x_estado_faltantes) < 1:
+                print("estado completo")
+            else:
+                print(estado.getNombre(), " le faltan ", simbolos_x_estado_faltantes)
+                faltantes.append((estado, simbolos_x_estado_faltantes))
+        return faltantes
+
     def completar(self, automata):
         if automata.esCompleto():
             print("Automata ya completo!")
             return
         else:
             automata.agregarEstado("sumidero")
-            faltantes = []  # [(estado, [simbolos])]
-            for simbolo in automata.getAlfabeto():
-                for estado in automata.getEstados():
-                    simbolos_x_estado = []
-                    for transicion in automata.getTransiciones():
-                        if transicion.getOrigen() == estado.getNombre() or transicion.getDestino() == estado.getNombre():
-                            simbolos_x_estado.append(transicion.getSimbolo())
-                    if simbolo not in simbolos_x_estado:
-                        if len(faltantes) < 1:
-                            faltantes.append((estado, [simbolo]))
-                        else:
-                            for tupla in faltantes:
-                                if tupla[0] == estado:
-                                    if simbolo not in tupla[1]:
-                                        tupla[1].append(simbolo)
-                                else:
-                                        if (estado, [simbolo]) not in faltantes:
-                                            faltantes.append((estado, [simbolo]))
 
-            print("faltantes - ", faltantes)
-            return faltantes
+        faltantes = self.getFaltantes(automata)
+        print(faltantes)
+        sumidero = automata.obtenerEstado("sumidero")
+
+        for estado in faltantes:
+            if estado[0] != sumidero:
+                # print(estado[0].getNombre())
+                automata.agregarTransicion(estado[0].getNombre(), estado[1], "sumidero")
+
+        automata.imprimirTransiciones()
