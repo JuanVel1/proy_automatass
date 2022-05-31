@@ -32,7 +32,7 @@ class Operaciones:
     # Metodo que se llama desde el main con la lista de estados ab, bc, ... creados
     def unionFinal(self, ini, lista_estados, lista_automatas, finales):
         automata_1, automata_2 = lista_automatas
-        res = []  # variable que guardara el resultado final
+        res = []  # variable que guardara el resultado.jpeg final
 
         # Recorremos las transiciones de cada automata para encontrar coincidencias
         for transicion_aut1 in automata_1.getTransiciones():
@@ -94,7 +94,7 @@ class Operaciones:
 
     def interseccion_final(self, ini, lista_estados, lista_automatas, finales):
         automata_1, automata_2 = lista_automatas
-        res = []  # variable que guardara el resultado final
+        res = []  # variable que guardara el resultado.jpeg final
 
         # Recorremos las transiciones de cada automata para encontrar coincidencias
         for transicion_aut1 in automata_1.getTransiciones():
@@ -144,14 +144,14 @@ class Operaciones:
                         vertice.getListaAdyacentes().append(origen)
 
     def complemento(self, automata):
-        """print("------------------Antes ------------------------------")
+        print("------------------Antes ------------------------------")
         automata.imprimirEstados()
-        automata.imprimirTransiciones()"""
+        automata.imprimirTransiciones()
         for estado in automata.getEstados():
             estado.cambiarEstadoFinal()
-        """print("------------------Despues ------------------------------")
+        print("------------------Despues ------------------------------")
         automata.imprimirEstados()
-        automata.imprimirTransiciones()"""
+        automata.imprimirTransiciones()
         return automata
 
     def reverso(self, automata):
