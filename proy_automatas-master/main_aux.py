@@ -118,7 +118,6 @@ if __name__ == "__main__":
         print("Es completo")
     else:
         print("No es completo")
-        # automata_resultante1.imprimirEstados()
-        for estado in ope.completar(automata_resultante1):
-            print(estado)
-            print(estado[0].getNombre())
+        ope.completar(automata_resultante1)
+        automata_resultante1.imprimirTransiciones()
+
